@@ -8,6 +8,7 @@ import { parseInventoryCsv } from './services/csvParser'
 import { enrichWithAi } from './services/geminiService'
 import type { AnalysisResult } from './types'
 import { ReorderView } from './components/reorder/ReorderView'
+import { OverstockView } from './components/overstock/OverstockView'
 
 const DEFAULT_CARRYING_RATE = 0.25
 
@@ -17,7 +18,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<ViewTab>('reorder')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [carryingRate] = useState(DEFAULT_CARRYING_RATE)
+  const [carryingRate, setCarryingRate] = useState(DEFAULT_CARRYING_RATE)
 
   const handleDemo = useCallback(() => {
     setMode('demo')
@@ -77,7 +78,11 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         {activeTab === 'reorder' && <ReorderView result={result} />}
         {activeTab === 'overstock' && (
-          <div className="text-gray-400">Overstock view — Task 9</div>
+          <OverstockView
+            result={result}
+            carryingRate={carryingRate}
+            onCarryingRateChange={setCarryingRate}
+          />
         )}
         {activeTab === 'scorecard' && (
           <div className="text-gray-400">Scorecard view — Task 10</div>
