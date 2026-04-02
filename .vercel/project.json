@@ -1,0 +1,16 @@
+{
+  "projectId": "prj_Xpa8CTLBhfadYFKFjtkFKHhH6t6v",
+  "orgId": "team_jcuH1hfsupeHlD0iKcJC0lMe",
+  "projectName": "idyllwood-inventory-intelligence",
+  "settings": {
+    "createdAt": 1775151571795,
+    "framework": "vite",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "24.x"
+  }
+}
