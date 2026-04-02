@@ -7,6 +7,7 @@ import { SAMPLE_RESULT } from './data/sampleData'
 import { parseInventoryCsv } from './services/csvParser'
 import { enrichWithAi } from './services/geminiService'
 import type { AnalysisResult } from './types'
+import { ReorderView } from './components/reorder/ReorderView'
 
 const DEFAULT_CARRYING_RATE = 0.25
 
@@ -74,9 +75,7 @@ export default function App() {
       )}
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {activeTab === 'reorder' && (
-          <div className="text-gray-400">Reorder view — Task 8</div>
-        )}
+        {activeTab === 'reorder' && <ReorderView result={result} />}
         {activeTab === 'overstock' && (
           <div className="text-gray-400">Overstock view — Task 9</div>
         )}
