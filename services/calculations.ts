@@ -57,8 +57,8 @@ export function classifyOverstockSeverity(
 ): OverstockSeverity | null {
   if (is_dead_stock && on_hand > 0) return 'high'
   if (months_supply === null) return null
-  if (months_supply > 12) return 'high'
-  if (months_supply > 4) return 'watch'
+  if (months_supply > 18) return 'high'
+  if (months_supply > 6) return 'watch'
   return null
 }
 
@@ -68,9 +68,9 @@ export function classifyOverstockAction(
 ): OverstockAction | null {
   if (is_dead_stock) return 'dead_stock'
   if (months_supply === null) return null
-  if (months_supply > 12) return 'return_negotiate'
-  if (months_supply > 6) return 'markdown'
-  if (months_supply > 4) return 'watch'
+  if (months_supply > 18) return 'return_negotiate'
+  if (months_supply > 9) return 'markdown'
+  if (months_supply > 6) return 'watch'
   return null
 }
 

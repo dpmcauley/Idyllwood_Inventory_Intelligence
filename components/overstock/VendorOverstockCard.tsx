@@ -59,12 +59,17 @@ export const VendorOverstockCard: React.FC<{ group: VendorOverstockGroup; carryi
                   <td className="px-4 py-2.5 text-slate-300">{item.on_hand}</td>
                   <td className="px-4 py-2.5 text-slate-400">{item.avg_monthly_sales || '—'}</td>
                   <td className="px-4 py-2.5">
-                    <span className={item.months_supply && item.months_supply > 12 ? 'text-red-400 font-bold' : item.months_supply && item.months_supply > 4 ? 'text-orange-400 font-bold' : 'text-slate-400'}>
+                    <span className={item.months_supply && item.months_supply > 18 ? 'text-red-400 font-bold' : item.months_supply && item.months_supply > 6 ? 'text-orange-400 font-bold' : 'text-slate-400'}>
                       {item.is_dead_stock ? '∞' : `${item.months_supply?.toFixed(1)} mo`}
                     </span>
                   </td>
-                  <td className={`px-4 py-2.5 ${(item.on_hand * item.unit_cost * carryingRate / 12) > 200 ? 'text-red-400' : 'text-orange-400'}`}>
-                    ${(item.on_hand * item.unit_cost * carryingRate / 12).toFixed(0)}
+                  <td className="px-4 py-2.5">
+                    <div className={`font-medium ${(item.unit_cost * carryingRate / 12) > 100 ? 'text-red-400' : 'text-orange-400'}`}>
+                      ${(item.unit_cost * carryingRate / 12).toFixed(0)}/unit
+                    </div>
+                    <div className="text-slate-500 text-xs">
+                      ${(item.on_hand * item.unit_cost * carryingRate / 12).toFixed(0)} total
+                    </div>
                   </td>
                   <td className="px-4 py-2.5">
                     {item.overstock_action && (

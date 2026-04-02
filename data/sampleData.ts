@@ -32,8 +32,8 @@ const ITEMS: InventoryItem[] = [
     unit_cost: 1440, lead_time_days: 21, reorder_point: 2,
     available: 14, net_need: 0, suggest_qty: 0,
     months_supply: 17.5, monthly_carrying_cost: 420, is_dead_stock: false,
-    reorder_severity: null, overstock_severity: 'high', overstock_action: 'return_negotiate',
-    ai_rationale: 'At 17.5 months of supply and $420/month in carrying cost, this SKU will cost $7,350 before it sells through at current velocity. A return negotiation with Meridian is recommended before the next buying cycle.',
+    reorder_severity: null, overstock_severity: 'watch', overstock_action: 'markdown',
+    ai_rationale: 'At 17.5 months of supply, carrying cost is $30/unit per month ($420 total). A targeted markdown to accelerate sell-through is the lower-risk move before this crosses the 18-month return threshold.',
   },
   {
     sku: 'DS005100', product_name: 'Solara Hard Case Dreadnought', category: 'Accessories',
@@ -42,7 +42,7 @@ const ITEMS: InventoryItem[] = [
     unit_cost: 160, lead_time_days: 14, reorder_point: 3,
     available: 9, net_need: 0, suggest_qty: 0,
     months_supply: 7.5, monthly_carrying_cost: 30, is_dead_stock: false,
-    reorder_severity: null, overstock_severity: 'watch', overstock_action: 'markdown',
+    reorder_severity: null, overstock_severity: 'watch', overstock_action: 'watch',
     ai_rationale: '7.5 months of supply on a case that sells with the Dreadnought. If Dreadnought reorders land, velocity may improve — watch this through Q3.',
   },
   {
@@ -52,8 +52,8 @@ const ITEMS: InventoryItem[] = [
     unit_cost: 36, lead_time_days: 7, reorder_point: 8,
     available: 48, net_need: 0, suggest_qty: 0,
     months_supply: 12.0, monthly_carrying_cost: 36, is_dead_stock: false,
-    reorder_severity: null, overstock_severity: 'high', overstock_action: 'markdown',
-    ai_rationale: 'Exactly 12 months of supply. At $36/unit a markdown to clear half the stock is low-risk and frees shelf space.',
+    reorder_severity: null, overstock_severity: 'watch', overstock_action: 'markdown',
+    ai_rationale: 'Exactly 12 months of supply at $0.75/unit per month in carrying cost. A moderate markdown to clear half the stock is low-risk and frees shelf space.',
   },
   {
     sku: 'DS120300', product_name: 'Apex Stage Cable 10ft', category: 'Accessories',
@@ -103,8 +103,8 @@ const ITEMS: InventoryItem[] = [
     unit_cost: 899, lead_time_days: 14, reorder_point: 2,
     available: 5, net_need: 0, suggest_qty: 0,
     months_supply: 5.6, monthly_carrying_cost: 112.38, is_dead_stock: false,
-    reorder_severity: null, overstock_severity: 'watch', overstock_action: 'watch',
-    ai_rationale: '5.6 months of supply on a high-cost unit ($899). Monitor sell-through before the next Crestline order.',
+    reorder_severity: null, overstock_severity: null, overstock_action: null,
+    ai_rationale: null,
   },
   {
     sku: 'DS091200', product_name: 'Vantage Sustain Pedal', category: 'Accessories',
@@ -123,8 +123,8 @@ const ITEMS: InventoryItem[] = [
     unit_cost: 45, lead_time_days: 7, reorder_point: 6,
     available: 22, net_need: 0, suggest_qty: 0,
     months_supply: 4.9, monthly_carrying_cost: 20.63, is_dead_stock: false,
-    reorder_severity: null, overstock_severity: 'watch', overstock_action: 'watch',
-    ai_rationale: 'Just above the 4-month watch threshold. Low unit cost — not urgent, but stop reordering until below 3 months.',
+    reorder_severity: null, overstock_severity: null, overstock_action: null,
+    ai_rationale: null,
   },
   {
     sku: 'DS089300', product_name: 'Vantage Arranger Workstation', category: 'Keyboards',
@@ -195,7 +195,7 @@ const ITEMS: InventoryItem[] = [
     unit_cost: 1100, lead_time_days: 45, reorder_point: 1,
     available: 2, net_need: 0, suggest_qty: 0,
     months_supply: 5.0, monthly_carrying_cost: 45.83, is_dead_stock: false,
-    reorder_severity: null, overstock_severity: 'watch', overstock_action: 'watch',
+    reorder_severity: null, overstock_severity: null, overstock_action: null,
     ai_rationale: null,
   },
   {
@@ -322,27 +322,19 @@ function buildSampleResult(): AnalysisResult {
     ],
     overstock_groups: [
       {
-        vendor_id: 'V001000', vendor_name: 'Meridian Music Supply', worst_severity: 'high',
-        items: ITEMS.filter(i => i.vendor_id === 'V001000' && i.overstock_severity),
-        capital_tied_up: ITEMS.filter(i => i.vendor_id === 'V001000' && i.overstock_severity)
-          .reduce((s, i) => s + i.on_hand * i.unit_cost, 0),
-        monthly_carrying_cost: ITEMS.filter(i => i.vendor_id === 'V001000' && i.overstock_severity)
-          .reduce((s, i) => s + i.monthly_carrying_cost, 0),
-      },
-      {
-        vendor_id: 'V002000', vendor_name: 'Crestline Distribution', worst_severity: 'watch',
-        items: ITEMS.filter(i => i.vendor_id === 'V002000' && i.overstock_severity),
-        capital_tied_up: ITEMS.filter(i => i.vendor_id === 'V002000' && i.overstock_severity)
-          .reduce((s, i) => s + i.on_hand * i.unit_cost, 0),
-        monthly_carrying_cost: ITEMS.filter(i => i.vendor_id === 'V002000' && i.overstock_severity)
-          .reduce((s, i) => s + i.monthly_carrying_cost, 0),
-      },
-      {
         vendor_id: 'V004000', vendor_name: 'Waverly Imports', worst_severity: 'high',
         items: ITEMS.filter(i => i.vendor_id === 'V004000' && i.overstock_severity),
         capital_tied_up: ITEMS.filter(i => i.vendor_id === 'V004000' && i.overstock_severity)
           .reduce((s, i) => s + i.on_hand * i.unit_cost, 0),
         monthly_carrying_cost: ITEMS.filter(i => i.vendor_id === 'V004000' && i.overstock_severity)
+          .reduce((s, i) => s + i.monthly_carrying_cost, 0),
+      },
+      {
+        vendor_id: 'V001000', vendor_name: 'Meridian Music Supply', worst_severity: 'watch',
+        items: ITEMS.filter(i => i.vendor_id === 'V001000' && i.overstock_severity),
+        capital_tied_up: ITEMS.filter(i => i.vendor_id === 'V001000' && i.overstock_severity)
+          .reduce((s, i) => s + i.on_hand * i.unit_cost, 0),
+        monthly_carrying_cost: ITEMS.filter(i => i.vendor_id === 'V001000' && i.overstock_severity)
           .reduce((s, i) => s + i.monthly_carrying_cost, 0),
       },
     ],
@@ -380,9 +372,9 @@ function buildSampleResult(): AnalysisResult {
       top_actions: [
         { type: 'reorder', severity: 'critical', vendor_name: 'Meridian Music Supply', vendor_id: 'V001000', text: 'Call Meridian — Solara Dreadnought and Concert are out of available stock' },
         { type: 'reorder', severity: 'critical', vendor_name: 'Crestline Distribution', vendor_id: 'V002000', text: 'Call Crestline — Vantage 61-key: both units committed, zero available' },
-        { type: 'overstock', severity: 'high', vendor_name: 'Meridian Music Supply', vendor_id: 'V001000', text: 'Solara 12-String: 17.5 months supply, $420/mo carrying cost — negotiate return' },
         { type: 'overstock', severity: 'high', vendor_name: 'Waverly Imports', vendor_id: 'V004000', text: 'Waverly Parlour Guitar: zero sales velocity — dead stock, escalate to vendor' },
-        { type: 'overstock', severity: 'high', vendor_name: 'Meridian Music Supply', vendor_id: 'V001000', text: 'Apex Leather Strap: 12 months supply — consider markdown to accelerate sell-through' },
+        { type: 'overstock', severity: 'high', vendor_name: 'Meridian Music Supply', vendor_id: 'V001000', text: 'Solara 12-String: 17.5 months supply at $30/unit/mo — markdown before it crosses the 18-month return threshold' },
+        { type: 'overstock', severity: 'high', vendor_name: 'Meridian Music Supply', vendor_id: 'V001000', text: 'Apex Leather Strap: 12 months supply — markdown to clear half the stock and free shelf space' },
       ],
     },
     warnings: [],
