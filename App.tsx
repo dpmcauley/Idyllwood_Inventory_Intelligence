@@ -7,6 +7,7 @@ import { SAMPLE_RESULT } from './data/sampleData'
 import { parseInventoryCsv } from './services/csvParser'
 import { enrichWithAi } from './services/geminiService'
 import type { AnalysisResult } from './types'
+import { ExportButtons } from './components/ExportButtons'
 import { ReorderView } from './components/reorder/ReorderView'
 import { OverstockView } from './components/overstock/OverstockView'
 import { ScorecardView } from './components/scorecard/ScorecardView'
@@ -63,7 +64,10 @@ export default function App() {
           <span className="text-taupe-400 tracking-widest uppercase text-xs font-semibold">
             Inventory Intelligence
           </span>
-          <ModeToggle mode={mode} onDemo={handleDemo} onUpload={handleUpload} isLoading={isLoading} />
+          <div className="flex items-center gap-3">
+            <ExportButtons result={result} />
+            <ModeToggle mode={mode} onDemo={handleDemo} onUpload={handleUpload} isLoading={isLoading} />
+          </div>
         </div>
       </div>
 
