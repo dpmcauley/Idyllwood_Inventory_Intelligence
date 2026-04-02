@@ -12,7 +12,6 @@ import {
 import type { InventoryRow, InventoryItem, AnalysisResult, DataWarning } from '../types'
 
 const REQUIRED_COLUMNS = ['sku', 'product_name', 'category', 'vendor_name', 'on_hand', 'unit_cost', 'reorder_point'] as const
-const NUMERIC_COLUMNS = ['on_hand', 'on_order', 'committed', 'avg_monthly_sales', 'unit_cost', 'lead_time_days', 'reorder_point'] as const
 
 export interface ParseError {
   type: 'missing_columns' | 'empty_file' | 'parse_error'
