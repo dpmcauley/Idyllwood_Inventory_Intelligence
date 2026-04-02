@@ -1,0 +1,89 @@
+import React, { useState, useCallback } from 'react'
+import { Header } from './components/Header'
+import { ModeToggle } from './components/ModeToggle'
+import { ViewTabs, type ViewTab } from './components/ViewTabs'
+import { DataWarningBanner } from './components/DataWarningBanner'
+import { SAMPLE_RESULT } from './data/sampleData'
+import { parseInventoryCsv } from './services/csvParser'
+import { enrichWithAi } from './services/geminiService'
+import type { AnalysisResult } from './types'
+
+const DEFAULT_CARRYING_RATE = 0.25
+
+export default function App() {
+  const [result, setResult] = useState<AnalysisResult>(SAMPLE_RESULT)
+  const [mode, setMode] = useState<'demo' | 'upload'>('demo')
+  const [activeTab, setActiveTab] = useState<ViewTab>('reorder')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [carryingRate] = useState(DEFAULT_CARRYING_RATE)
+
+  const handleDemo = useCallback(() => {
+    setMode('demo')
+    setResult(SAMPLE_RESULT)
+    setError(null)
+  }, [])
+
+  const handleUpload = useCallback((file: File) => {
+    setIsLoading(true)
+    setError(null)
+    parseInventoryCsv(
+      file,
+      carryingRate,
+      async (parsed) => {
+        try {
+          const enriched = await enrichWithAi(parsed)
+          setResult(enriched)
+          setMode('upload')
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Analysis failed.')
+          setResult(parsed) // show what we have even without AI
+          setMode('upload')
+        } finally {
+          setIsLoading(false)
+        }
+      },
+      (err) => {
+        setError(err.message)
+        setIsLoading(false)
+      }
+    )
+  }, [carryingRate])
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-white font-sans">
+      <Header />
+
+      {/* Top bar */}
+      <div className="pt-20 bg-slate-900 border-b border-white/7">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+          <span className="text-taupe-400 tracking-widest uppercase text-xs font-semibold">
+            Inventory Intelligence
+          </span>
+          <ModeToggle mode={mode} onDemo={handleDemo} onUpload={handleUpload} isLoading={isLoading} />
+        </div>
+      </div>
+
+      <ViewTabs active={activeTab} onChange={setActiveTab} />
+      <DataWarningBanner warnings={result.warnings} />
+
+      {error !== null && (
+        <div className="mx-6 mt-4 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-300 text-sm">
+          {error}
+        </div>
+      )}
+
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {activeTab === 'reorder' && (
+          <div className="text-gray-400">Reorder view — Task 8</div>
+        )}
+        {activeTab === 'overstock' && (
+          <div className="text-gray-400">Overstock view — Task 9</div>
+        )}
+        {activeTab === 'scorecard' && (
+          <div className="text-gray-400">Scorecard view — Task 10</div>
+        )}
+      </main>
+    </div>
+  )
+}
