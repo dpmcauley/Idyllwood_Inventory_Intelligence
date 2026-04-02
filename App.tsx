@@ -8,6 +8,7 @@ import { parseInventoryCsv } from './services/csvParser'
 import { enrichWithAi } from './services/geminiService'
 import type { AnalysisResult } from './types'
 import { ExportButtons } from './components/ExportButtons'
+import { Footer } from './components/Footer'
 import { ReorderView } from './components/reorder/ReorderView'
 import { OverstockView } from './components/overstock/OverstockView'
 import { ScorecardView } from './components/scorecard/ScorecardView'
@@ -96,6 +97,7 @@ export default function App() {
           />
         )}
       </main>
+      <Footer />
     </div>
   )
 }
