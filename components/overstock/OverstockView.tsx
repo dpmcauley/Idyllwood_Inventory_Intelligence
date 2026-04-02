@@ -19,7 +19,7 @@ export const OverstockView: React.FC<Props> = ({ result, carryingRate, onCarryin
 
   return (
     <div>
-      <OverstockSummaryChips result={result} />
+      <OverstockSummaryChips result={result} carryingRate={carryingRate} />
       <CarryingRateBar rate={carryingRate} onChange={onCarryingRateChange} />
       <VendorFilter
         vendors={result.overstock_groups.map(g => ({ vendor_id: g.vendor_id, vendor_name: g.vendor_name, severity: g.worst_severity }))}

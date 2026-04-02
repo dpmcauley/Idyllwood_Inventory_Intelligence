@@ -3,16 +3,19 @@ import type { AnalysisResult } from '../../types'
 
 const fmt = (n: number) => `$${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
 
-export const OverstockSummaryChips: React.FC<{ result: AnalysisResult }> = ({ result }) => {
+export const OverstockSummaryChips: React.FC<{ result: AnalysisResult; carryingRate: number }> = ({ result, carryingRate }) => {
   const highRisk = result.items.filter(i => i.overstock_severity === 'high').length
   const watch = result.items.filter(i => i.overstock_severity === 'watch').length
+  const overstockItems = result.items.filter(i => i.overstock_severity)
+  const monthlyCarrying = overstockItems.reduce((s, i) => s + i.on_hand * i.unit_cost * carryingRate / 12, 0)
+  const capitalAtRisk = overstockItems.reduce((s, i) => s + i.on_hand * i.unit_cost, 0)
 
   return (
     <div className="flex gap-3 flex-wrap mb-5">
       <Chip value={highRisk} label="High Risk SKUs" color="text-red-400" border="border-red-500/20" />
       <Chip value={watch} label="Watch SKUs" color="text-orange-400" border="border-orange-500/20" />
-      <Chip value={fmt(result.scorecard.total_monthly_carrying_cost)} label="Monthly Carrying Cost" color="text-taupe-400" border="border-taupe-500/25" />
-      <Chip value={fmt(result.scorecard.capital_at_risk)} label="Capital Tied Up" color="text-taupe-400" border="border-taupe-500/25" />
+      <Chip value={fmt(monthlyCarrying)} label="Monthly Carrying Cost" color="text-taupe-400" border="border-taupe-500/25" />
+      <Chip value={fmt(capitalAtRisk)} label="Capital Tied Up" color="text-taupe-400" border="border-taupe-500/25" />
     </div>
   )
 }

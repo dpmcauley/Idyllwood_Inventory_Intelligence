@@ -60,11 +60,8 @@ export default function App() {
       <Header />
 
       {/* Top bar */}
-      <div className="pt-20 bg-slate-900 border-b border-white/7">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-          <span className="text-taupe-400 tracking-widest uppercase text-xs font-semibold">
-            Inventory Intelligence
-          </span>
+      <div className="pt-14 bg-slate-900 border-b border-white/7">
+        <div className="max-w-7xl mx-auto px-6 py-2 flex justify-end items-center">
           <div className="flex items-center gap-3">
             <ExportButtons result={result} />
             <ModeToggle mode={mode} onDemo={handleDemo} onUpload={handleUpload} isLoading={isLoading} />

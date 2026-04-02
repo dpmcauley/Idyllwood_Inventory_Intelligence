@@ -1,7 +1,15 @@
+@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+@theme {
+  --color-slate-850: #151b23;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
+  --color-taupe-400: #a39785;
+  --color-taupe-500: #8b8070;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Playfair Display', serif;
+}
 
 @layer components {
   .glass-panel {

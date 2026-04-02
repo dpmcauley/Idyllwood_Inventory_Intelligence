@@ -63,8 +63,8 @@ export const VendorOverstockCard: React.FC<{ group: VendorOverstockGroup; carryi
                       {item.is_dead_stock ? '∞' : `${item.months_supply?.toFixed(1)} mo`}
                     </span>
                   </td>
-                  <td className={`px-4 py-2.5 ${item.monthly_carrying_cost > 200 ? 'text-red-400' : 'text-orange-400'}`}>
-                    ${item.monthly_carrying_cost.toFixed(0)}
+                  <td className={`px-4 py-2.5 ${(item.on_hand * item.unit_cost * carryingRate / 12) > 200 ? 'text-red-400' : 'text-orange-400'}`}>
+                    ${(item.on_hand * item.unit_cost * carryingRate / 12).toFixed(0)}
                   </td>
                   <td className="px-4 py-2.5">
                     {item.overstock_action && (
@@ -82,7 +82,7 @@ export const VendorOverstockCard: React.FC<{ group: VendorOverstockGroup; carryi
                           : 'border-white/10 text-slate-500 hover:text-white'
                       }`}
                     >
-                      {expandedSku === item.sku ? 'Hide Math ▲' : 'Show Math'}
+                      {expandedSku === item.sku ? 'Hide ▲' : 'Details'}
                     </button>
                   </td>
                 </tr>
