@@ -9,6 +9,7 @@ import { enrichWithAi } from './services/geminiService'
 import type { AnalysisResult } from './types'
 import { ReorderView } from './components/reorder/ReorderView'
 import { OverstockView } from './components/overstock/OverstockView'
+import { ScorecardView } from './components/scorecard/ScorecardView'
 
 const DEFAULT_CARRYING_RATE = 0.25
 
@@ -85,7 +86,10 @@ export default function App() {
           />
         )}
         {activeTab === 'scorecard' && (
-          <div className="text-gray-400">Scorecard view — Task 10</div>
+          <ScorecardView
+            result={result}
+            onNavigate={(tab, _vendorId) => setActiveTab(tab)}
+          />
         )}
       </main>
     </div>
