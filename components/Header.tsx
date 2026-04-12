@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Menu, X, ArrowLeft, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import { Logo } from './Logo'
+import { ExportButtons } from './ExportButtons'
+import { ModeToggle } from './ModeToggle'
+import type { AnalysisResult } from '../types'
 
 const TOOLS = [
   { label: "Buyer's Dashboard", href: "https://inventory.idyllwoodlab.com", live: true, id: "buyers" },
@@ -11,7 +14,15 @@ const TOOLS = [
 ]
 const CURRENT_TOOL = "inventory"
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  result: AnalysisResult
+  mode: 'demo' | 'upload'
+  onDemo: () => void
+  onUpload: (file: File) => void
+  isLoading: boolean
+}
+
+export const Header: React.FC<HeaderProps> = ({ result, mode, onDemo, onUpload, isLoading }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const toolsRef = useRef<HTMLDivElement>(null)
   const [toolsOpen, setToolsOpen] = useState(false)
@@ -27,11 +38,16 @@ export const Header: React.FC = () => {
   }, [])
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-white/5 py-3">
+    <nav className="sticky top-0 w-full z-50 bg-slate-950/95 backdrop-blur-md border-b border-white/5 py-3">
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <Logo onClick={() => window.location.href = 'https://idyllwoodlab.com'} />
 
-        <div className="hidden md:flex items-center gap-4 text-sm font-medium">
+        {/* Desktop right */}
+        <div className="hidden md:flex items-center gap-3">
+          <ExportButtons result={result} />
+          <div className="h-5 w-px bg-slate-800" />
+          <ModeToggle mode={mode} onDemo={onDemo} onUpload={onUpload} isLoading={isLoading} />
+          <div className="h-5 w-px bg-slate-800" />
           {/* Tools Dropdown */}
           <div className="relative" ref={toolsRef}>
             <button
@@ -79,10 +95,10 @@ export const Header: React.FC = () => {
 
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-slate-950/95 backdrop-blur-md border-t border-white/10 p-6 flex flex-col gap-4">
-          <a href="https://idyllwoodlab.com" className="flex items-center gap-2 text-gray-300 hover:text-white">
-            <ArrowLeft size={14} />
-            Back to Idyllwood Lab
-          </a>
+          <div className="flex items-center gap-2 flex-wrap">
+            <ExportButtons result={result} />
+            <ModeToggle mode={mode} onDemo={onDemo} onUpload={onUpload} isLoading={isLoading} />
+          </div>
           <div className="border-t border-white/10 pt-4">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600 mb-3">Tools</p>
             {TOOLS.map((tool) =>

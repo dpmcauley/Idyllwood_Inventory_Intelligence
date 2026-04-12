@@ -1,13 +1,11 @@
 import React, { useState, useCallback } from 'react'
 import { Header } from './components/Header'
-import { ModeToggle } from './components/ModeToggle'
 import { ViewTabs, type ViewTab } from './components/ViewTabs'
 import { DataWarningBanner } from './components/DataWarningBanner'
 import { SAMPLE_RESULT } from './data/sampleData'
 import { parseInventoryCsv } from './services/csvParser'
 import { enrichWithAi } from './services/geminiService'
 import type { AnalysisResult } from './types'
-import { ExportButtons } from './components/ExportButtons'
 import { Footer } from './components/Footer'
 import { ReorderView } from './components/reorder/ReorderView'
 import { OverstockView } from './components/overstock/OverstockView'
@@ -57,17 +55,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white font-sans">
-      <Header />
-
-      {/* Top bar */}
-      <div className="pt-14 bg-slate-900 border-b border-white/7">
-        <div className="max-w-7xl mx-auto px-6 py-2 flex justify-end items-center">
-          <div className="flex items-center gap-3">
-            <ExportButtons result={result} />
-            <ModeToggle mode={mode} onDemo={handleDemo} onUpload={handleUpload} isLoading={isLoading} />
-          </div>
-        </div>
-      </div>
+      <Header result={result} mode={mode} onDemo={handleDemo} onUpload={handleUpload} isLoading={isLoading} />
 
       <ViewTabs active={activeTab} onChange={setActiveTab} />
       <DataWarningBanner warnings={result.warnings} />
